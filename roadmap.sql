@@ -110,7 +110,7 @@ select * from skills where id > 10 union select * from skills where  id <= 10;
 #---------------------------------------------------------------------------------#
 
 #---------------------------------------------------------------------------------#
-#Work with where
+# Work with where
 select * from skills where status = 'to_do';
 explain select * from skills where status = 'to_do';
 #---------------------------------------------------------------------------------#
@@ -155,4 +155,28 @@ explain select * from games where second_name = 'test3';
 
 create unique index unique_index on games(second_name);
 drop index unique_index on games;
+#---------------------------------------------------------------------------------#
+
+#---------------------------------------------------------------------------------#
+# Work with full text index
+drop table if exists books;
+create table if not exists books
+(
+    id int not null auto_increment,
+    name varchar(30) not null ,
+    description TEXT(50),
+    FULLTEXT (description),
+    primary key (id)
+);
+
+insert into books(name, description) values ('Skill_1', 'Skill 1 description');
+insert into books(name, description) values ('Skill_2', 'Skill 2 description word 123 123 123dd');
+insert into books(name, description) values ('Skill_3', 'Skill 3 description');
+insert into books(name, description) values ('Skill_4', 'Skill 4 description');
+
+
+select * from books;
+
+explain select * from books where description like '%word%';
+explain select * from books where match(description) against ('word');
 #---------------------------------------------------------------------------------#
